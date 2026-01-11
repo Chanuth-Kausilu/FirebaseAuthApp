@@ -13,6 +13,14 @@ import Observation
 final class SettingsViewModel {
     
     
+    var authProviders: [AuthProviderOptions] = []
+    
+    func fetchAuthProviders() {
+        if let providers = try? AuthManage.shared.getProviders(){
+            authProviders=providers
+        }
+    }
+    
     func signOut() throws {
         try AuthManage.shared.signOut()
     }
@@ -57,10 +65,15 @@ struct SettingsView: View {
                     }
                 }
             }
+            if vm.authProviders.contains(.email){
+                emailSection
+            }
             
-            emailSection
             
 
+        }
+        .onAppear{
+            vm.fetchAuthProviders()
         }
         .navigationTitle("Settings")
     }

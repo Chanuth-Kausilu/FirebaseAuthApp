@@ -10,6 +10,11 @@ import Firebase
 import FirebaseAuth
 
 
+enum AuthProviderOptions: String {
+    case email = "password"
+    case google = "google.com"
+}
+
 struct  AuthDataResultModel {
     let uuid: String
     let email: String?
@@ -36,6 +41,25 @@ final class AuthManage{
     
     func signOut() throws {
         try Auth.auth().signOut()
+    }
+    
+    //google.com
+    //password
+    func getProviders() throws -> [AuthProviderOptions]{
+        guard let providerData = Auth.auth().currentUser?.providerData else {
+            throw URLError(.badServerResponse)
+        }
+        
+        var providers: [AuthProviderOptions] = []
+        for provider in providerData {
+            if let option = AuthProviderOptions(rawValue: provider.providerID) {
+                providers.append(option)
+            }else {
+                assertionFailure("Provider Option not found: \(provider.providerID)")
+            }
+        }
+        
+        return providers
     }
 }
 
