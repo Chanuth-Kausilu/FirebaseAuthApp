@@ -43,6 +43,11 @@ final class AuthManage{
         try Auth.auth().signOut()
     }
     
+    func delete() async throws {
+        guard let User = Auth.auth().currentUser else { throw URLError(.badURL) }
+        try await User.delete()
+    }
+    
     //google.com
     //password
     func getProviders() throws -> [AuthProviderOptions]{
